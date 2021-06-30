@@ -1,7 +1,10 @@
 package dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 
 import mavenhibernate.HibernateUtil;
 public class DaoGenerico<E> {
@@ -46,6 +49,22 @@ public class DaoGenerico<E> {
 		transaction.commit();
 		
 		return entidadeSalva;
+	}
+	
+	/**
+	 * Metodo para consultar todos objetos da base.
+	 * @return List<E>
+	 */
+	public List<E> consultarTodos(){
+		EntityTransaction transaction = entityManager.getTransaction();
+		transaction.begin();
+		String query = "select e from " + getEntityClass().getSimpleName() + " e";
+		
+		TypedQuery<E> typedQuery = entityManager.createQuery(query, getEntityClass());
+		
+		List<E> resultSet = typedQuery.getResultList();
+		
+		return resultSet;
 	}
 	
 	/**
